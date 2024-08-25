@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .card {
+      border: 1px solid #e0e0e0;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 0.375rem;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.375rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Add Product</h1>
+      <a href="admin-dashboard.html" class="text-white hover:underline">Back to Dashboard</a>
+    </div>
+  </header>
+  <main class="flex-grow container mx-auto p-6">
+    <div class="card bg-white">
+      <h2 class="text-xl font-semibold mb-4">Add New Product</h2>
+      <form id="add-product-form" class="space-y-4">
+        <div>
+          <label for="product-image" class="block text-gray-700">Product Image</label>
+          <input type="file" id="product-image" class="border p-2 w-full" accept="image/*">
+          <img id="image-preview" class="mt-4 max-w-full h-auto hidden" />
+        </div>
+        <div>
+          <label for="product-name" class="block text-gray-700">Product Name</label>
+          <input type="text" id="product-name" class="border p-2 w-full" placeholder="Enter product name">
+        </div>
+        <div>
+          <label for="product-price" class="block text-gray-700">Price ($)</label>
+          <input type="number" id="product-price" class="border p-2 w-full" placeholder="Enter product price" step="0.01">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Add Product</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="modal">
+    <div class="modal-content">
+      <h2 class="text-xl font-semibold mb-4">Success</h2>
+      <p>Product added successfully!</p>
+      <button id="close-modal" class="bg-green-600 text-white p-2 rounded hover:bg-green-700">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('product-image');
+    const imagePreview = document.getElementById('image-preview');
+    const addProductForm = document.getElementById('add-product-form');
+
+    // Display selected image
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.classList.add('hidden');
+      }
+    });
+
+    // Handle form submission
+    addProductForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const file = fileInput.files[0];
+      const productName = document.getElementById('product-name').value;
+      const productPrice = document.getElementById('product-price').value;
+
+      if (!file || !productName || !productPrice) {
+        alert('Please fill out all fields and select an image.');
+        return;
+      }
+
+      // Logic to add the product goes here (e.g., update the server or local storage)
+
+      // Show success modal
+      document.getElementById('success-modal').style.display = 'flex';
+
+      // Clear fields after successful addition
+      addProductForm.reset();
+      imagePreview.classList.add('hidden');
+    });
+
+    // Close success modal
+    document.getElementById('close-modal').addEventListener('click', function() {
+      document.getElementById('success-modal').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .card {
+      border: 1px solid #e0e0e0;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-green-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Update Products</h1>
+      <a href="admin-dashboard.html" class="text-white hover:underline">Back to Dashboard</a>
+    </div>
+  </header>
+  <main class="flex-grow container mx-auto p-6">
+    <div class="mb-6">
+      <input type="text" id="search" placeholder="Search product by name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500" onkeyup="searchProducts()">
+    </div>
+    <div id="productList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+  <script>
+    const products = {
+      "veg": [
+        { name: 'Fresh Spinach', price: 40, rating: 4.5, image: '../../assets/veg/img1.jpg' },
+        { name: 'Carrots', price: 30, rating: 4.2, image: '../../assets/veg/img2.jpg' },
+        { name: 'Broccoli', price: 60, rating: 4.8, image: '../../assets/veg/img3.jpg' },
+        { name: 'Capsicum', price: 50, rating: 4.1, image: '../../assets/veg/img4.jpg' },
+        { name: 'Cabbage', price: 20, rating: 4.0, image: '../../assets/veg/img5.jpg' },
+        { name: 'Cauliflower', price: 25, rating: 4.3, image: '../../assets/veg/img6.jpg' },
+        { name: 'Lettuce', price: 45, rating: 4.6, image: '../../assets/veg/img7.jpg' },
+        { name: 'Potatoes', price: 35, rating: 4.4, image: '../../assets/veg/img8.jpg' },
+        { name: 'Tomatoes', price: 25, rating: 4.2, image: '../../assets/veg/img9.jpg' },
+        { name: 'Onions', price: 30, rating: 4.5, image: '../../assets/veg/img10.jpg' },
+      ],
+      "non-veg": [
+        { name: 'Chicken Breast', price: 250, rating: 4.7, image: '../../assets/non-veg/img1.jpg' },
+        { name: 'Mutton', price: 600, rating: 4.8, image: '../../assets/non-veg/img2.jpg' },
+        { name: 'Fish Fillet', price: 350, rating: 4.6, image: '../../assets/non-veg/img3.jpg' },
+        { name: 'Prawns', price: 400, rating: 4.5, image: '../../assets/non-veg/img4.jpg' },
+        { name: 'Eggs (12)', price: 70, rating: 4.4, image: '../../assets/non-veg/img5.jpg' },
+        { name: 'Lamb Chops', price: 500, rating: 4.7, image: '../../assets/non-veg/img6.jpg' },
+        { name: 'Chicken Wings', price: 220, rating: 4.5, image: '../../assets/non-veg/img7.jpg' },
+        { name: 'Salmon', price: 650, rating: 4.9, image: '../../assets/non-veg/img8.jpg' },
+        { name: 'Turkey', price: 800, rating: 4.6, image: '../../assets/non-veg/img9.jpg' },
+        { name: 'Bacon', price: 300, rating: 4.7, image: '../../assets/non-veg/img10.jpg' },
+      ],
+      "fruits": [
+        { name: 'Apples', price: 120, rating: 4.7, image: '../../assets/fruits/img1.jpg' },
+        { name: 'Bananas', price: 40, rating: 4.5, image: '../../assets/fruits/img2.jpg' },
+        { name: 'Grapes', price: 150, rating: 4.8, image: '../../assets/fruits/img3.jpg' },
+        { name: 'Oranges', price: 80, rating: 4.6, image: '../../assets/fruits/img4.jpg' },
+        { name: 'Strawberries', price: 200, rating: 4.9, image: '../../assets/fruits/img5.jpg' },
+        { name: 'Pineapples', price: 90, rating: 4.4, image: '../../assets/fruits/img6.jpg' },
+        { name: 'Mangoes', price: 250, rating: 4.8, image: '../../assets/fruits/img7.jpg' },
+        { name: 'Blueberries', price: 300, rating: 4.7, image: '../../assets/fruits/img8.jpg' },
+        { name: 'Peaches', price: 180, rating: 4.6, image: '../../assets/fruits/img9.jpg' },
+        { name: 'Pears', price: 110, rating: 4.5, image: '../../assets/fruits/img10.jpg' },
+      ],
+      "daily-essentials": [
+        { name: 'Milk (1L)', price: 50, rating: 4.6, image: '../../assets/daily-essentials/img1.jpg' },
+        { name: 'Bread (500g)', price: 30, rating: 4.5, image: '../../assets/daily-essentials/img2.jpg' },
+        { name: 'Eggs (12)', price: 70, rating: 4.4, image: '../../assets/daily-essentials/img3.jpg' },
+        { name: 'Rice (1kg)', price: 80, rating: 4.7, image: '../../assets/daily-essentials/img4.jpg' },
+        { name: 'Butter (200g)', price: 60, rating: 4.5, image: '../../assets/daily-essentials/img5.jpg' },
+        { name: 'Cheese (200g)', price: 100, rating: 4.8, image: '../../assets/daily-essentials/img6.jpg' },
+        { name: 'Pasta (500g)', price: 40, rating: 4.6, image: '../../assets/daily-essentials/img7.jpg' },
+        { name: 'Cereal (500g)', price: 90, rating: 4.4, image: '../../assets/daily-essentials/img8.jpg' },
+        { name: 'Sugar (1kg)', price: 60, rating: 4.5, image: '../../assets/daily-essentials/img9.jpg' },
+        { name: 'Flour (1kg)', price: 50, rating: 4.6, image: '../../assets/daily-essentials/img10.jpg' },
+      ]
+    };
+
+    function searchProducts() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const productList = document.getElementById('productList');
+      productList.innerHTML = '';
+      const allProducts = Object.values(products).flat();
+
+      const filteredProducts = allProducts.filter(product => product.name.toLowerCase().includes(query));
+
+      filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'card bg-white';
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover mb-4">
+          <h3 class="text-lg font-semibold">${product.name}</h3>
+          <p class="text-gray-700">$${product.price.toFixed(2)}</p>
+          <a href="update.html?name=${encodeURIComponent(product.name)}" class="mt-4 block text-center text-indigo-600 hover:underline">Update</a>
+        `;
+        productList.appendChild(productCard);
+      });
+    }
+  </script>
+</body>
+
+</html>
+
+
+
+
+

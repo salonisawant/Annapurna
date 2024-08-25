@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .header-container {
+      background-color: #2E933C;
+      color: white;
+    }
+
+    .header-button {
+      background-color: #C8E6C9;
+      color: #2E7D32;
+      border: 1px solid #A5D6A7;
+    }
+
+    .header-button:hover {
+      background-color: #81C784;
+      border-color: #66BB6A;
+      color: white;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.375rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.375rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      color: #2E7D32;
+      font-weight: bold;
+    }
+
+    .card-subtitle {
+      color: #757575;
+    }
+
+    .card-text {
+      color: #333;
+    }
+
+    .form-input {
+      border-color: #D1D5DB;
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+      background-color: #F9FAFB;
+    }
+
+    .form-input:focus {
+      border-color: #2E933C;
+      outline: none;
+      box-shadow: 0 0 0 1px #2E933C;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header Section -->
+  <header class="header-container mt-4 mx-8 border rounded-xl">
+    <div class="container mx-auto flex justify-between items-center px-6 py-4">
+      <h1 class="text-2xl font-bold">Profile</h1>
+      <a href="../login.html" class="header-button px-4 py-2 rounded" onclick="logout()">Logout</a>
+    </div>
+  </header>
+
+  <!-- Profile Section -->
+  <section class="container mx-auto px-6 py-8">
+    <!-- User Details -->
+    <div id="userDetails" class="card mb-6">
+      <h2 class="card-title text-xl">User Details</h2>
+      <p id="userDetailsMessage" class="card-text">Loading...</p>
+    </div>
+
+    <!-- Addresses -->
+    <div id="addressList" class="card mb-6">
+      <h2 class="card-title text-xl">Addresses</h2>
+      <p id="addressMessage" class="card-text">Loading...</p>
+    </div>
+    <button class="header-button px-4 py-2 rounded" onclick="showAddressModal()">Add New Address</button>
+
+    <!-- Subscriptions -->
+    <div id="subscriptionList" class="card mb-6">
+      <h2 class="card-title text-xl">Subscriptions</h2>
+      <p id="subscriptionMessage" class="card-text">Loading...</p>
+    </div>
+  </section>
+
+  <!-- Add Address Modal -->
+  <div id="addressModal" class="modal">
+    <div class="modal-content">
+      <h3 class="text-lg font-bold mb-4">Add New Address</h3>
+      <form id="addressForm">
+        <div class="mb-4">
+          <label for="addressLine1" class="block text-gray-700 font-medium mb-1">Address Line 1:</label>
+          <input type="text" id="addressLine1" class="form-input mt-1 block w-full" required>
+        </div>
+        <div class="mb-4">
+          <label for="addressLine2" class="block text-gray-700 font-medium mb-1">Address Line 2:</label>
+          <input type="text" id="addressLine2" class="form-input mt-1 block w-full">
+        </div>
+        <div class="mb-4">
+          <label for="city" class="block text-gray-700 font-medium mb-1">City:</label>
+          <input type="text" id="city" class="form-input mt-1 block w-full" required>
+        </div>
+        <div class="mb-4">
+          <label for="state" class="block text-gray-700 font-medium mb-1">State:</label>
+          <input type="text" id="state" class="form-input mt-1 block w-full" required>
+        </div>
+        <div class="mb-4">
+          <label for="postalCode" class="block text-gray-700 font-medium mb-1">Postal Code:</label>
+          <input type="text" id="postalCode" class="form-input mt-1 block w-full" required>
+        </div>
+        <div class="mb-4">
+          <label for="country" class="block text-gray-700 font-medium mb-1">Country:</label>
+          <input type="text" id="country" class="form-input mt-1 block w-full" required>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" class="header-button px-4 py-2 rounded mr-2" onclick="hideAddressModal()">Cancel</button>
+          <button type="submit" class="header-button px-4 py-2 rounded">Add Address</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+    // Clear local storage
+    localStorage.clear();
+
+    // Redirect to login page
+    window.location.href = '../login.html';
+  }
+
+    // Function to show the address modal
+    function showAddressModal() {
+      document.getElementById('addressModal').classList.add('show');
+    }
+
+    // Function to hide the address modal
+    function hideAddressModal() {
+      document.getElementById('addressModal').classList.remove('show');
+    }
+
+    // Function to display user details
+    function displayUserDetails() {
+      const userDetails = JSON.parse(localStorage.getItem('user')) || {};
+      const userDetailsSection = document.getElementById('userDetails');
+      const userDetailsMessage = document.getElementById('userDetailsMessage');
+
+      if (Object.keys(userDetails).length === 0) {
+        userDetailsMessage.textContent = 'No user details available.';
+      } else {
+        userDetailsSection.innerHTML = `
+          <p class="card-text"><strong>First Name:</strong> ${userDetails.firstName || 'N/A'}</p>
+          <p class="card-text"><strong>Last Name:</strong> ${userDetails.lastName || 'N/A'}</p>
+          <p class="card-text"><strong>Email:</strong> ${userDetails.email || 'N/A'}</p>
+          <p class="card-text"><strong>Password:</strong> ${userDetails.password ? '********' : 'N/A'}</p>
+        `;
+        userDetailsMessage.style.display = 'none';
+      }
+    }
+
+    // Function to display addresses
+    function displayAddresses() {
+      const addresses = JSON.parse(localStorage.getItem('address')) || [];
+      const addressSection = document.getElementById('addressList');
+      const addressMessage = document.getElementById('addressMessage');
+
+      if (addresses.length === 0) {
+        addressMessage.textContent = 'No addresses available.';
+      } else {
+        addressSection.innerHTML = addresses.map((address, index) => `
+          <div class="bg-gray-100 p-4 rounded-lg mb-4">
+            <p class="card-text"><strong>Address Line 1:</strong> ${address['addressLine1'] || 'N/A'}</p>
+            <p class="card-text"><strong>Address Line 2:</strong> ${address['addressLine2'] || 'N/A'}</p>
+            <p class="card-text"><strong>City:</strong> ${address.city || 'N/A'}</p>
+            <p class="card-text"><strong>State:</strong> ${address.state || 'N/A'}</p>
+            <p class="card-text"><strong>Postal Code:</strong> ${address['postalCode'] || 'N/A'}</p>
+            <p class="card-text"><strong>Country:</strong> ${address.country || 'N/A'}</p>
+          </div>
+        `).join('');
+        addressMessage.style.display = 'none';
+      }
+    }
+
+    // Function to display subscriptions
+    function displaySubscriptions() {
+      const subscriptions = JSON.parse(localStorage.getItem('subscriptions')) || [];
+      const subscriptionSection = document.getElementById('subscriptionList');
+      const subscriptionMessage = document.getElementById('subscriptionMessage');
+
+      if (subscriptions.length === 0) {
+        subscriptionMessage.textContent = 'No subscriptions available.';
+      } else {
+        subscriptionSection.innerHTML = subscriptions.map((sub, index) => `
+          <div class="bg-gray-100 p-4 rounded-lg mb-4">
+            <p class="card-text"><strong>Product Name:</strong> ${sub.productName || 'N/A'}</p>
+            <p class="card-text"><strong>Status :</strong>${sub.activeStatus ? 'Activate' : 'Deactivated'}</p>
+            <p class="card-text"><strong>Price:</strong> ${sub.price || 'N/A'}</p>
+            <p class="card-text"><strong>Subscription Type:</strong> ${sub.subscriptionType }</p>
+            <p class="card-text"><strong>Address :</strong>             ${sub.address['address line1']}, ${sub.address['address line2']}, ${sub.address.city}, ${sub.address.state}, ${sub.address['postal code']}, ${sub.address.country}
+</p>
+            <button class="header-button px-4 py-2 rounded mt-2" onclick="toggleSubscription(${index})">${sub.activeStatus ? 'Deactivate' : 'Activate'}</button>
+          </div>
+        `).join('');
+        subscriptionMessage.style.display = 'none';
+      }
+    }
+
+    // Function to toggle subscription status
+    function toggleSubscription(index) {
+      const subscriptions = JSON.parse(localStorage.getItem('subscriptions')) || [];
+      if (subscriptions[index]) {
+        subscriptions[index].activeStatus = !subscriptions[index].activeStatus;
+        localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+        displaySubscriptions();
+      }
+    }
+
+    // Function to handle address form submission
+    document.getElementById('addressForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const address = {
+        'addressLine1': document.getElementById('addressLine1').value,
+        'addressLine2': document.getElementById('addressLine2').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        'postalCode': document.getElementById('postalCode').value,
+        country: document.getElementById('country').value
+      };
+      const addresses = JSON.parse(localStorage.getItem('address')) || [];
+      addresses.push(address);
+      localStorage.setItem('address', JSON.stringify(addresses));
+      hideAddressModal();
+      displayAddresses();
+    });
+
+    // Initialize the page content
+    document.addEventListener('DOMContentLoaded', function () {
+      displayUserDetails();
+      displayAddresses();
+      displaySubscriptions();
+    });
+  </script>
+</body>
+
+</html>

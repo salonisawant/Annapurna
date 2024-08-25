@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .carousel {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .carousel img {
+      width: 100%; /* Each image takes up 100% of the carousel container */
+      object-fit: cover;
+    }
+    .carousel-container {
+      width: 100%; /* Carousel container takes up the full width */
+      overflow: hidden; /* Hide images that are out of view */
+    }
+    .form-section {
+      transition: opacity 0.5s ease-in-out;
+    }
+    .hidden {
+      display: none;
+    }
+    .error {
+      color: red;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-4xl bg-white rounded-lg shadow-md flex">
+    <!-- Form Section -->
+    <div class="w-1/2 p-8 bg-gray-100 rounded-l-lg">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Create Account</h2>
+      <form id="createAccountForm" class="space-y-4">
+        <!-- Personal Information Section -->
+        <div id="personalInfoSection" class="form-section">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">First Name</label>
+            <input type="text" id="firstName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="firstNameError" class="error hidden">First Name is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+            <input type="text" id="lastName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="lastNameError" class="error hidden">Last Name is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="emailError" class="error hidden">A valid email is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="passwordError" class="error hidden">Password is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input type="tel" id="phone" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="phoneError" class="error hidden">Phone number is required.</p>
+          </div>
+          <div>
+            <button type="button" onclick="validatePersonalInfo()" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none">Continue</button>
+          </div>
+        </div>
+
+        <!-- Address Section -->
+        <div id="addressSection" class="form-section hidden">
+          <div class="mt-6">
+            <h3 class="text-xl font-bold text-gray-700">Address</h3>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Address Line 1</label>
+            <input type="text" id="addressLine1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="addressLine1Error" class="error hidden">Address Line 1 is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Address Line 2</label>
+            <input type="text" id="addressLine2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">City</label>
+            <input type="text" id="city" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="cityError" class="error hidden">City is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">State</label>
+            <input type="text" id="state" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="stateError" class="error hidden">State is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Postal Code</label>
+            <input type="text" id="postalCode" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="postalCodeError" class="error hidden">Postal Code is required.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Country</label>
+            <input type="text" id="country" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <p id="countryError" class="error hidden">Country is required.</p>
+          </div>
+          <div>
+            <button type="submit" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none">Create Account</button>
+          </div>
+        </div>
+      </form>
+      <div class="text-sm text-center mt-4">
+        <a href="login.html" class="text-indigo-500 hover:underline">Already have an account? Login</a>
+      </div>
+    </div>
+
+    <!-- Carousel Side -->
+    <div class="carousel-container w-1/2 h-96 p-8 flex justify-center items-center bg-gray-50 rounded-r-lg">
+      <div class="carousel w-full" id="carousel">
+        <img src="../assets/food_img1.jpg" alt="Image 1">
+        <img src="../assets/food_img2.jpg" alt="Image 2">
+        <img src="../assets/food_img3.jpg" alt="Image 3">
+        <img src="../assets/food_img4.jpg" alt="Image 4">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const carousel = document.getElementById('carousel');
+    let currentIndex = 0;
+
+    function autoSlide() {
+      currentIndex = (currentIndex + 1) % 4;
+      carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    setInterval(autoSlide, 3000); // Change image every 3 seconds
+
+    function validatePersonalInfo() {
+      let isValid = true;
+
+      // Clear previous errors
+      const errors = document.querySelectorAll('.error');
+      errors.forEach(error => error.classList.add('hidden'));
+
+      // Validate First Name
+      const firstName = document.getElementById('firstName');
+      if (!firstName.value.trim()) {
+        document.getElementById('firstNameError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Last Name
+      const lastName = document.getElementById('lastName');
+      if (!lastName.value.trim()) {
+        document.getElementById('lastNameError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Email
+      const email = document.getElementById('email');
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email.value.trim())) {
+        document.getElementById('emailError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Password
+      const password = document.getElementById('password');
+      if (!password.value.trim()) {
+        document.getElementById('passwordError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Phone Number
+      const phone = document.getElementById('phone');
+      if (!phone.value.trim()) {
+        document.getElementById('phoneError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Show Address Section if all fields are valid
+      if (isValid) {
+        document.getElementById('personalInfoSection').classList.add('hidden');
+        document.getElementById('addressSection').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
